@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WavNAF: Learning Wave Propagation Priors for Neural Acoustic Fields</title>
+  <meta name="description" content="WavNAF (NeurIPS 2026): bridging FDTD wave simulation and neural acoustic fields through scaled wave probing and a Neural Acoustic Scaling Module.">
+  <meta property="og:title" content="WavNAF: Learning Wave Propagation Priors for Neural Acoustic Fields">
+  <meta property="og:description" content="NeurIPS 2026. FDTD wave-propagation priors for neural acoustic field learning.">
+  <meta property="og:image" content="assets/images/main_figure_v7.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <a class="venue-badge" href="https://neurips.cc/Conferences/2026" target="_blank" rel="noopener">NeurIPS 2026</a>
+
+    <h1 class="title">
+      <span class="name">WavNAF</span>: Learning Wave Propagation Priors<br class="br-wide"> for Neural Acoustic Fields
+    </h1>
+
+    <div class="authors">
+      <span class="author">Taeho Kim<sup>1</sup></span>
+      <span class="author">Hyunjun Kim<sup>1</sup></span>
+      <span class="author">MinKyu Lee<sup>1</sup></span>
+      <span class="author">SuBeen Lee<sup>1</sup></span>
+      <span class="author">Inkyu An<sup>2&dagger;</sup></span>
+      <span class="author">Jae-Pil Heo<sup>1&dagger;</sup></span>
+    </div>
+    <div class="affiliations">
+      <span><sup>1</sup>Sungkyunkwan University</span>
+      <span><sup>2</sup>Kookmin University</span>
+      <span><sup>&dagger;</sup>Joint supervision</span>
+    </div>
+
+    <p class="venue-line">Conference on Neural Information Processing Systems (NeurIPS) 2026</p>
+
+    <!--
+      Links are temporarily disabled.
+      To enable a button: add href="..." (and target="_blank" rel="noopener"),
+      remove the "is-disabled" class, aria-disabled, tabindex and the "soon" label.
+    -->
+    <div class="links">
+      <a class="btn is-disabled" aria-disabled="true" tabindex="-1" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+        <span>Paper</span><span class="soon">soon</span>
+      </a>
+      <a class="btn is-disabled" aria-disabled="true" tabindex="-1" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+        <span>Code</span><span class="soon">soon</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container narrow">
+      <h2>Abstract</h2>
+      <p class="abstract">
+        Room acoustics modeling requires capturing intricate wave phenomena beyond direct sound propagation, including reflections, refractions, and diffractions.
+        Recent neural acoustic synthesis methods have progressively incorporated richer scene representations and physics-informed priors, yet typically learn acoustic behavior without considering wave propagation dynamics, which inherently capture diffraction and interference phenomena.
+        We propose <strong>WavNAF</strong>, a framework that bridges wave dynamics and neural acoustic modeling by leveraging Finite-Difference Time-Domain (FDTD) simulations, which solve the wave equation on discrete spatiotemporal grids to capture these phenomena.
+        However, directly applying FDTD at full scale is computationally prohibitive under CFL stability constraints.
+        Inspired by traditional acoustic scale models, WavNAF constructs a geometry-preserving, scaled digital replica from NeRF-derived scene geometry and acoustically probes it with temporally compressed FDTD simulation.
+        The resulting pressure maps are encoded not as direct full-scale Room Impulse Response (RIR) estimates, but as compressed-domain wave signatures that provide the neural acoustic field with a structured inductive bias beyond static geometry.
+        To bridge the mismatch between these scaled simulation features and full-scale acoustic responses, we introduce a Neural Acoustic Scaling Module that adaptively recalibrates pressure-map features at the feature level for full-scale RIR prediction.
+        Experiments show that WavNAF yields consistent gains over prior neural baselines across standard acoustic metrics.
+      </p>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container wide">
+      <h2>Method Overview</h2>
+      <figure class="figure">
+        <a href="assets/images/main_figure_v7.png" target="_blank" rel="noopener">
+          <img src="assets/images/main_figure_v7.png" alt="Overview of the WavNAF architecture" width="3794" height="1170">
+        </a>
+        <figcaption>
+          <strong>Overview of WavNAF.</strong>
+          A 3D voxel density grid is first generated via NeRF and converted into 2D acoustic parameter grids.
+          Using these grids, we simulate acoustic pressure maps through FDTD wave simulation.
+          For a given time query, the corresponding pressure map is combined with one-hot encoded source and microphone positions, then processed by a feature extractor and scaled by our neural acoustic scaling module.
+          Finally, an MLP predicts the STFT magnitude of the room impulse response from these scaled features.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container wide">
+      <h2>Demo on the RAF Dataset</h2>
+      <p class="lead">
+        A listener moves along a trajectory through two real rooms from the RAF dataset.
+        At each microphone pose WavNAF predicts the room impulse response, which is convolved with a dry source signal.
+        <span class="hint">Turn on sound; headphones recommended.</span>
+      </p>
+
+      <div class="video-grid">
+        <figure class="video-card">
+          <video controls preload="metadata" playsinline poster="assets/videos/RAF_emptyroom_with_clap_poster.jpg">
+            <source src="assets/videos/RAF_emptyroom_with_clap.mp4" type="video/mp4">
+          </video>
+          <figcaption><span class="tag">Empty Room</span> Clap</figcaption>
+        </figure>
+        <figure class="video-card">
+          <video controls preload="metadata" playsinline poster="assets/videos/RAF_furnishedroom_with_clap_poster.jpg">
+            <source src="assets/videos/RAF_furnishedroom_with_clap.mp4" type="video/mp4">
+          </video>
+          <figcaption><span class="tag">Furnished Room</span> Clap</figcaption>
+        </figure>
+        <figure class="video-card">
+          <video controls preload="metadata" playsinline poster="assets/videos/RAF_emptyroom_with_music_poster.jpg">
+            <source src="assets/videos/RAF_emptyroom_with_music.mp4" type="video/mp4">
+          </video>
+          <figcaption><span class="tag">Empty Room</span> Music</figcaption>
+        </figure>
+        <figure class="video-card">
+          <video controls preload="metadata" playsinline poster="assets/videos/RAF_furnishedroom_with_music_poster.jpg">
+            <source src="assets/videos/RAF_furnishedroom_with_music.mp4" type="video/mp4">
+          </video>
+          <figcaption><span class="tag">Furnished Room</span> Music</figcaption>
+        </figure>
+      </div>
+      <p class="credit">Music: Jim Yosef – Firefly [NCS Release].</p>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container narrow">
+      <h2>BibTeX</h2>
+      <div class="bibtex">
+        <button class="copy-btn" type="button" data-target="bibtex-code">Copy</button>
+<pre id="bibtex-code">@inproceedings{wavnaf2026,
+  title     = {WavNAF: Learning Wave Propagation Priors for Neural Acoustic Fields},
+  author    = {Kim, Taeho and Kim, Hyunjun and Lee, MinKyu and Lee, SuBeen and An, Inkyu and Heo, Jae-Pil},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2026}
+}</pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2026 WavNAF authors.</p>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = document.getElementById(btn.dataset.target).innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+      });
+    });
+  });
+
+  // Play one demo at a time.
+  var videos = document.querySelectorAll('.video-card video');
+  videos.forEach(function (v) {
+    v.addEventListener('play', function () {
+      videos.forEach(function (o) { if (o !== v) o.pause(); });
+    });
+  });
+</script>
+</body>
+</html>
