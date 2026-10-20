@@ -4,8 +4,8 @@
   --text: #1c1e21;
   --muted: #5f6670;
   --border: #e3e6ea;
-  --accent: #6a1b9a;
-  --accent-soft: #f3e8fa;
+  --accent: #0123b4;
+  --accent-soft: #e8ebfa;
   --btn-bg: #1c1e21;
   --btn-text: #ffffff;
   --code-bg: #f0f1f4;
@@ -18,8 +18,8 @@
     --text: #e8eaed;
     --muted: #9aa0a8;
     --border: #2c2f35;
-    --accent: #ce93d8;
-    --accent-soft: #2e2236;
+    --accent: #8fa0ff;
+    --accent-soft: #1a2152;
     --btn-bg: #e8eaed;
     --btn-text: #121316;
     --code-bg: #22252a;
@@ -45,20 +45,6 @@ body {
 
 /* Hero */
 .hero { padding: 64px 0 40px; text-align: center; }
-
-.venue-badge {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-}
 
 .title {
   margin: 0 0 20px;

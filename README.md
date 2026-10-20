@@ -9,3 +9,7 @@ Static project page for **WavNAF: Learning Wave Propagation Priors for Neural Ac
 ## Enable the Paper / Code buttons
 In `index.html`, for each button: add `href="..."` (plus `target="_blank" rel="noopener"`),
 and remove `class="is-disabled"`, `aria-disabled`, `tabindex` and the `<span class="soon">` label.
+
+## Show the BibTeX section
+It is wrapped in an HTML comment in `index.html`. Replace the entry with the official BibTeX
+from the proceedings and remove the comment wrapper.
